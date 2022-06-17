@@ -8,12 +8,13 @@ import {
   Redirect,
 } from "react-router-dom";
 
+import home from "./components/home/home";
+
 const App = () => {
   return (
     <Router>
       <Switch>
-        {/* we have to check if there is a session for this current user and if hes signed in */}
-        <Route exact path="/" />
+        <Route exact path="/" component={home}/>
         {/*   */}
       </Switch>
     </Router>
