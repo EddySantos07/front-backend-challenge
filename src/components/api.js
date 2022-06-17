@@ -9,7 +9,7 @@ function callBreweryAPI() {
     let city = "new_york";
 
     // call brewery api
-    axios.get('https://api.openbrewerydb.org/breweries?by_city=san_diego&per_page=3')
+    axios.get(`https://api.openbrewerydb.org/breweries?by_city=${city}&per_page=3`)
     .then( (data) => {
         setApiData(data);
     })
