@@ -22,7 +22,10 @@ import ListItemText from "@mui/material/ListItemText";
 import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 
+import Card from "@mui/material/Card";
+
 import GoogleMapReact from "google-map-react";
+const API_KEY = process.env.REACT_APP_API_KEY;
 
 function home() {
   let [currentBrewerys, setCurrentBrewerys] = useState([]);
@@ -119,6 +122,7 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
 export default function PersistentDrawerRight() {
   let [currentBrewerys, setCurrentBrewerys] = useState([]);
+  // let [currentBrewryData, setcurrentBrewryData] = useState();
 
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -157,39 +161,44 @@ export default function PersistentDrawerRight() {
 
       <Main open={open}>
         <DrawerHeader />
+        <>
+          <div>
+            {currentBrewerys.length > 0 ? (
+              <ul className="list-group">
+                {currentBrewerys.map((brewery) => {
+                  return (
+                    <>
+                      <Card>
+                        <li className="list-group-item">
+                          <div className="thickCSSText">{brewery.name}</div>
 
-        <div>
-          {currentBrewerys.length > 0 ? (
-            <ul className="list-group">
-              {currentBrewerys.map((brewery) => {
-                return (
-                  <>
-                    <li className="list-group-item">
-                      <div> {brewery.name} </div>
-                      <div> {brewery.brewery_type}</div>
-                      <div>
-                        {" "}
-                        {brewery.street}, {brewery.city}, {brewery.state},{" "}
-                        {brewery.postal_code}
-                      </div>
-                      <div>
-                        {" "}
-                        <a target="_blank" href={brewery.website_url}>
-                          {" "}
-                          {brewery.website_url}
-                        </a>{" "}
-                      </div>
-                    </li>
-                  </>
-                );
-              })}
-            </ul>
-          ) : (
-            <div> No current Brewerys available </div>
-          )}
+                          <div> {brewery.brewery_type}</div>
+                          <div>
+                            {" "}
+                            Address - {brewery.street}, {brewery.city},{" "}
+                            {brewery.state}, {brewery.postal_code}
+                          </div>
+                          <div>
+                            {" "}
+                            Website: -
+                            <a target="_blank" href={brewery.website_url}>
+                              {" "}
+                              {brewery.website_url}
+                            </a>{" "}
+                          </div>
+                        </li>
+                      </Card>
+                    </>
+                  );
+                })}
+              </ul>
+            ) : (
+              <div> No current Brewerys available </div>
+            )}
 
-          <div> {/*here the map will go  */}</div>
-        </div>
+            <div> {/*here the map will go  */}</div>
+          </div>
+        </>
       </Main>
       <Drawer
         sx={{
@@ -226,7 +235,43 @@ export default function PersistentDrawerRight() {
           ))}
         </List> */}
         <Divider />
+        <br></br>
+        <br></br>
+
+        <br></br>
+        <br></br>
+        <div style={{ height: "100vh", width: "100%" }}>
+          <GoogleMapReact
+            bootstrapURLKeys={{ key: API_KEY }}
+            defaultCenter={{ lat: 40.73, lng: -73.93 }} // default cordinates for nyc
+            defaultZoom={11}
+          >
+            <InitMapForBrewery
+              lat={59.955413}
+              lng={30.337844}
+              // text="My Marker"
+            />
+          </GoogleMapReact>
+        </div>
       </Drawer>
     </Box>
+  );
+}
+
+function InitMapForBrewery(BreweryData) {
+  return (
+    <div
+      style={{
+        color: "white",
+        background: "grey",
+        padding: "15px 10px",
+        display: "inline-flex",
+        textAlign: "center",
+        alignItems: "center",
+        justifyContent: "center",
+        borderRadius: "100%",
+        transform: "translate(-50%, -50%)",
+      }}
+    ></div>
   );
 }
