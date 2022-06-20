@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 
 import home from "./components/home/home";
+import PersistentDrawerRight from "./components/home/home";
 
 const App = () => {
   return (
