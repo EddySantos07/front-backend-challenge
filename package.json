@@ -20,8 +20,10 @@
   "homepage": "https://github.com/EddySantos07/front-backend-challenge#readme",
   "dependencies": {
     "axios": "^0.22.0",
+    "bootstrap": "^5.2.0-beta1",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
+    "google-map-react": "^2.1.10",
     "node-polyfill-webpack-plugin": "^1.1.4",
     "nodemon": "^2.0.16",
     "path-browserify": "^1.0.1",
