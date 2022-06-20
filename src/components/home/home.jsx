@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 
 import callBreweryAPI from "../api";
 import saveAPIData from "../saveAPIData";
+import getAPIData from "../getAPIData";
 
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -139,7 +140,19 @@ export default function PersistentDrawerRight() {
 
   const defaultMUI = useTheme();
 
+  let getAPIDataFromDB = async () => {
+    let breweriesData = await getAPIData();
+
+    return breweriesData;
+  };
   useEffect(() => {
+    let breweries = getAPIDataFromDB().then((data) => {
+      if (data.data.length > 0) {
+        setCurrentBrewerys(data.data);
+        return;
+      }
+    });
+
     let breweryData = callBreweryAPI().then((data) => {
       // call to db to get recent breweries
 

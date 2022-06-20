@@ -49,11 +49,19 @@ app.post("/saveBreweryData", async (req, res) => {
   );
 
   bulk
-    .then((results) => res.send(200))
+    .then((results) => res.sendStatus(200))
     .catch((err) => {
-      res.send(500);
+      res.sendStatus(500);
     });
 });
+
+app.get("/getBreweryData", async (req, res) => {
+  // get data from db -
+
+  let result = await BreweryModel.find();
+
+  res.send(result);
+})
 
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
