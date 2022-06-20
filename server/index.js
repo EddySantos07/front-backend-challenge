@@ -38,7 +38,7 @@ app.post("/saveBreweryData", async (req, res) => {
 
   let Breweries = req.body.Breweries;
 
-  let bulk = await BreweryModel.collection.bulkWrite(
+  let bulk = BreweryModel.collection.bulkWrite(
     Breweries.map((doc) => ({
       updateOne: {
         filter: { id: doc.id },
@@ -48,8 +48,11 @@ app.post("/saveBreweryData", async (req, res) => {
     }))
   );
 
-  console.log(bulk, "bulk??");
-  res.status(200);
+  bulk
+    .then((results) => res.send(200))
+    .catch((err) => {
+      res.send(500);
+    });
 });
 
 app.listen(port, () => {
