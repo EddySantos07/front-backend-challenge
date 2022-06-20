@@ -27,16 +27,14 @@ import ButtonBase from "@mui/material/ButtonBase";
 import CardActionArea from "@mui/material/CardActionArea";
 import { makeStyles } from "@mui/styles";
 
-import GoogleMapReact from "google-map-react";
-
-const API_KEY = process.env.REACT_APP_API_KEY;
+import GoogleMaps from "./googleMaps";
 
 function home() {
   let [currentBrewerys, setCurrentBrewerys] = useState([]);
 
   useEffect(() => {
     let breweryData = callBreweryAPI().then((data) => {
-      console.log(data.data);
+      // console.log(data.data);
       setCurrentBrewerys(data.data);
     });
   }, []);
@@ -131,8 +129,9 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 export default function PersistentDrawerRight() {
   let [currentBrewerys, setCurrentBrewerys] = useState([]);
   let [currentBrewryName, setCurrentBrewryName] = useState("");
-  let [defaultLatLang, setDefaultLatLang] = useState([59.955413, 30.337844])
-  let [currentLatLang, setCurrentLatLang] = useState([]);
+
+  let [currentLatLang, setCurrentLatLang] = useState([40.73, -73.93]);
+  let [isValidLocation, setIsValidLocation] = useState("");
 
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
@@ -148,6 +147,13 @@ export default function PersistentDrawerRight() {
 
   const handleDrawerOpen = ({ name, latitude, longitude }) => {
     setCurrentBrewryName(name);
+
+    console.log(latitude, longitude, "??");
+    if (latitude !== null && longitude !== null) {
+      setCurrentLatLang([latitude, longitude]);
+    } else {
+      setIsValidLocation("Couldnt Get Brewery Location! ");
+    }
 
     setOpen(true);
   };
@@ -167,9 +173,9 @@ export default function PersistentDrawerRight() {
             edge="end"
             onClick={handleDrawerOpen}
             sx={{ ...(open && { display: "none" }) }}
-          > */}
-          <MenuIcon />
-          {/* </IconButton> */}
+          >
+            <MenuIcon />
+          </IconButton> */}
         </Toolbar>
       </AppBar>
 
@@ -187,6 +193,11 @@ export default function PersistentDrawerRight() {
               >
                 <List>
                   {currentBrewerys.map((brewery, i) => {
+                    // if (!brewery.latitude && !brewery.longitude) { // this was for testing brewery locations if there is no location map will say Couldnt Get Brewery Location! in nyc there is no location if you uncomment the if statement it will throw you to alaska, zoom out becuase it looks like it doesnt work but zooming out will let you see the icy biome! "
+                    //   brewery.latitude = "-75.2565195";
+                    //   brewery.longitude = "43.24211175";
+                    // }
+
                     return (
                       <div key={i}>
                         <CardActionArea>
@@ -265,7 +276,20 @@ export default function PersistentDrawerRight() {
         </DrawerHeader>
         <Divider />
 
-        {currentBrewryName}
+        <List>
+          <ListItem >
+            <Typography variant="h5" gutterBottom component="div">
+             Current Brewery - {currentBrewryName}
+            </Typography>
+          </ListItem>
+
+          <ListItem>
+            <Typography  variant="h6" gutterBottom component="div">
+              {isValidLocation.length > 0 ? isValidLocation : null}
+            </Typography>
+          </ListItem>
+        </List>
+
         {/* <List>
           {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
             <ListItem key={text} disablePadding>
@@ -281,21 +305,12 @@ export default function PersistentDrawerRight() {
         <Divider />
         <br></br>
         <br></br>
-
-        <br></br>
-        <br></br>
         <div style={{ height: "100vh", width: "100%" }}>
-          <GoogleMapReact
-            bootstrapURLKeys={{ key: API_KEY }}
-            defaultCenter={{ lat: 40.73, lng: -73.93 }} // default cordinates for nyc
-            defaultZoom={11}
-          >
-            <InitMapForBrewery
-              lat={defaultLatLang[0]}
-              lng={defaultLatLang[1]}
-              // text="My Marker"
-            />
-          </GoogleMapReact>
+          <GoogleMaps
+            lat={currentLatLang[0]}
+            lang={currentLatLang[1]}
+            text={currentBrewryName}
+          />
         </div>
       </Drawer>
     </Box>
@@ -303,21 +318,3 @@ export default function PersistentDrawerRight() {
 }
 
 function initDrawerAndGoogleMaps(CurrentBreweryData) {}
-
-function InitMapForBrewery(BreweryData) {
-  return (
-    <div
-      style={{
-        color: "white",
-        background: "grey",
-        padding: "15px 10px",
-        display: "inline-flex",
-        textAlign: "center",
-        alignItems: "center",
-        justifyContent: "center",
-        borderRadius: "100%",
-        transform: "translate(-50%, -50%)",
-      }}
-    ></div>
-  );
-}
