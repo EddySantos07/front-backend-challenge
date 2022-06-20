@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import callBreweryAPI from "../api";
+// import
 
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -277,31 +278,19 @@ export default function PersistentDrawerRight() {
         <Divider />
 
         <List>
-          <ListItem >
+          <ListItem>
             <Typography variant="h5" gutterBottom component="div">
-             Current Brewery - {currentBrewryName}
+              Current Brewery - {currentBrewryName}
             </Typography>
           </ListItem>
 
           <ListItem>
-            <Typography  variant="h6" gutterBottom component="div">
+            <Typography variant="h6" gutterBottom component="div">
               {isValidLocation.length > 0 ? isValidLocation : null}
             </Typography>
           </ListItem>
         </List>
 
-        {/* <List>
-          {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
-            <ListItem key={text} disablePadding>
-              <ListItemButton>
-                <ListItemIcon>
-                  {index % 2 === 0 ? <InboxIcon /> : <MailIcon />}
-                </ListItemIcon>
-                <ListItemText primary={text} />
-              </ListItemButton>
-            </ListItem>
-          ))}
-        </List> */}
         <Divider />
         <br></br>
         <br></br>
