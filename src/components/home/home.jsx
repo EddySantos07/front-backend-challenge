@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 
 import callBreweryAPI from "../api";
-// import
+import saveAPIData from "../saveAPIData";
 
 import { styled, useTheme } from "@mui/material/styles";
 import Box from "@mui/material/Box";
@@ -141,8 +141,12 @@ export default function PersistentDrawerRight() {
 
   useEffect(() => {
     let breweryData = callBreweryAPI().then((data) => {
+      // call to db to get recent breweries
+
       console.log(data.data);
       setCurrentBrewerys(data.data);
+
+      saveAPIData(data.data); // post to db
     });
   }, []);
 
