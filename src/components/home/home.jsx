@@ -23,8 +23,12 @@ import InboxIcon from "@mui/icons-material/MoveToInbox";
 import MailIcon from "@mui/icons-material/Mail";
 
 import Card from "@mui/material/Card";
+import ButtonBase from "@mui/material/ButtonBase";
+import CardActionArea from "@mui/material/CardActionArea";
+import { makeStyles } from "@mui/styles";
 
 import GoogleMapReact from "google-map-react";
+
 const API_KEY = process.env.REACT_APP_API_KEY;
 
 function home() {
@@ -72,6 +76,10 @@ function home() {
     </div>
   );
 }
+
+const useOverRideStyles = makeStyles({
+  width: "auto",
+});
 
 const drawerWidth = 500;
 
@@ -122,10 +130,14 @@ const DrawerHeader = styled("div")(({ theme }) => ({
 
 export default function PersistentDrawerRight() {
   let [currentBrewerys, setCurrentBrewerys] = useState([]);
-  // let [currentBrewryData, setcurrentBrewryData] = useState();
+  let [currentBrewryName, setCurrentBrewryName] = useState("");
+  let [defaultLatLang, setDefaultLatLang] = useState([59.955413, 30.337844])
+  let [currentLatLang, setCurrentLatLang] = useState([]);
 
   const theme = useTheme();
   const [open, setOpen] = React.useState(false);
+
+  const defaultMUI = useTheme();
 
   useEffect(() => {
     let breweryData = callBreweryAPI().then((data) => {
@@ -134,7 +146,9 @@ export default function PersistentDrawerRight() {
     });
   }, []);
 
-  const handleDrawerOpen = () => {
+  const handleDrawerOpen = ({ name, latitude, longitude }) => {
+    setCurrentBrewryName(name);
+
     setOpen(true);
   };
 
@@ -147,15 +161,15 @@ export default function PersistentDrawerRight() {
       <CssBaseline />
       <AppBar position="fixed" open={open}>
         <Toolbar>
-          <IconButton
+          {/* <IconButton
             color="inherit"
             aria-label="open drawer"
             edge="end"
             onClick={handleDrawerOpen}
             sx={{ ...(open && { display: "none" }) }}
-          >
-            <MenuIcon />
-          </IconButton>
+          > */}
+          <MenuIcon />
+          {/* </IconButton> */}
         </Toolbar>
       </AppBar>
 
@@ -164,34 +178,62 @@ export default function PersistentDrawerRight() {
         <>
           <div>
             {currentBrewerys.length > 0 ? (
-              <ul className="list-group">
-                {currentBrewerys.map((brewery) => {
-                  return (
-                    <>
-                      <Card>
-                        <li className="list-group-item">
-                          <div className="thickCSSText">{brewery.name}</div>
-
-                          <div> {brewery.brewery_type}</div>
-                          <div>
-                            {" "}
-                            Address - {brewery.street}, {brewery.city},{" "}
-                            {brewery.state}, {brewery.postal_code}
+              <Box
+                sx={{
+                  width: "100%",
+                  bgcolor: "background.paper",
+                  boxShadow: 1,
+                }}
+              >
+                <List>
+                  {currentBrewerys.map((brewery, i) => {
+                    return (
+                      <div key={i}>
+                        <CardActionArea>
+                          <div onClick={() => handleDrawerOpen(brewery)}>
+                            {/*  */}
+                            <ListItem disablePadding>
+                              <ListItemText
+                                component={"span"}
+                                variant={"body2"}
+                                primary={brewery.name}
+                                secondary={
+                                  <>
+                                    <Typography
+                                      component={"span"}
+                                      sx={{ display: "inline" }}
+                                      variant="body2"
+                                      color="text.primary"
+                                    >
+                                      {brewery.brewery_type}
+                                      <Typography
+                                        display="block"
+                                        component={"span"}
+                                      >
+                                        Address - {brewery.street},{" "}
+                                        {brewery.city},{brewery.state},{" "}
+                                        {brewery.postal_code}
+                                      </Typography>
+                                    </Typography>
+                                    Website: -
+                                    <a
+                                      target="_blank"
+                                      href={brewery.website_url}
+                                    >
+                                      {" "}
+                                      {brewery.website_url}
+                                    </a>{" "}
+                                  </>
+                                }
+                              />
+                            </ListItem>
                           </div>
-                          <div>
-                            {" "}
-                            Website: -
-                            <a target="_blank" href={brewery.website_url}>
-                              {" "}
-                              {brewery.website_url}
-                            </a>{" "}
-                          </div>
-                        </li>
-                      </Card>
-                    </>
-                  );
-                })}
-              </ul>
+                        </CardActionArea>
+                      </div>
+                    );
+                  })}
+                </List>
+              </Box>
             ) : (
               <div> No current Brewerys available </div>
             )}
@@ -222,6 +264,8 @@ export default function PersistentDrawerRight() {
           </IconButton>
         </DrawerHeader>
         <Divider />
+
+        {currentBrewryName}
         {/* <List>
           {["Inbox", "Starred", "Send email", "Drafts"].map((text, index) => (
             <ListItem key={text} disablePadding>
@@ -247,8 +291,8 @@ export default function PersistentDrawerRight() {
             defaultZoom={11}
           >
             <InitMapForBrewery
-              lat={59.955413}
-              lng={30.337844}
+              lat={defaultLatLang[0]}
+              lng={defaultLatLang[1]}
               // text="My Marker"
             />
           </GoogleMapReact>
@@ -257,6 +301,8 @@ export default function PersistentDrawerRight() {
     </Box>
   );
 }
+
+function initDrawerAndGoogleMaps(CurrentBreweryData) {}
 
 function InitMapForBrewery(BreweryData) {
   return (
